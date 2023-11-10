@@ -3,10 +3,13 @@ import { ibm } from "@/styles/fonts";
 import { useAccount, useConnectors } from "@starknet-react/core";
 import Modal from "./Modal";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import clsx from "clsx";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const { account, address, status } = useAccount();
+  const router = useRouter();
 
   useEffect(() => {
     if (status === "connected") setIsOpen(false);
@@ -70,19 +73,31 @@ export default function Navbar() {
         >
           <div className="flex flex-col gap-5 mt-5 sm:flex-row sm:items-center sm:mt-0 sm:ps-5">
             <a
-              className="font-medium text-blue-500"
+              className={clsx(
+                "font-medium ",
+                router.pathname === "/explore"
+                  ? "text-brand-primary"
+                  : "text-gray-600"
+              )}
               href="/explore"
-              aria-current="page"
             >
               Explore
             </a>
-            <a className="font-medium text-gray-600" href="/sell">
+            <a
+              className={clsx(
+                "font-medium ",
+                router.pathname === "/sell"
+                  ? "text-brand-primary"
+                  : "text-gray-600"
+              )}
+              href="/sell"
+            >
               Upload/Sell
             </a>
             {status === "disconnected" ? (
               <button
                 type="button"
-                className="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+                className="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-brand-primary text-white hover:bg-blue-600 disabled:opacity-50 disabled:pointer-events-none"
                 data-hs-overlay="#hs-vertically-centered-modal"
                 onClick={() => setIsOpen(true)}
               >
