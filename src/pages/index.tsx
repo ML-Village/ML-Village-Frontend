@@ -32,12 +32,12 @@ export default function Home() {
         </div>
       </div>
       <img
-        className="w-[60vw] absolute h-auto -right-32 drop-shadow-xl z-10"
+        className="w-[60vw] absolute h-auto -right-32 drop-shadow-xl z-10 pointer-events-none"
         src={"/assets/mockup.png"}
         alt="ML Village"
       />
       <img
-        className="w-full absolute bottom-0 left-0"
+        className="w-full absolute bottom-0 left-0 pointer-events-none"
         src={"/assets/gradient.png"}
         alt="ML Village"
       />
