@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { ibm } from "@/styles/fonts";
 import clsx from "clsx";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -18,12 +19,16 @@ export default function Home() {
           privacy.
         </p>
         <div className="flex flex-row items-center justify-center gap-x-5">
-          <button className="py-3 px-11 bg-brand-primary rounded-lg font-bold text-xl text-white">
-            Start Exploring
-          </button>
-          <button className="py-3 px-11 bg-white rounded-lg font-bold text-xl text-brand-primary border border-brand-primary">
-            Sell Your Models
-          </button>
+          <Link href="/explore">
+            <button className="py-3 px-11 bg-brand-primary rounded-lg font-bold text-xl text-white">
+              Start Exploring
+            </button>
+          </Link>
+          <Link href="/sell">
+            <button className="py-3 px-11 bg-white rounded-lg font-bold text-xl text-brand-primary border border-brand-primary">
+              Sell Your Models
+            </button>
+          </Link>
         </div>
       </div>
       <img
