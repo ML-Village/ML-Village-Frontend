@@ -2,7 +2,7 @@
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { Dialog } from "@headlessui/react";
-import { useConnectors } from "@starknet-react/core";
+import { useAccount, useConnect } from "@starknet-react/core";
 
 interface IModal {
   isOpen: boolean;
@@ -10,7 +10,7 @@ interface IModal {
 }
 
 export default function Modal({ isOpen, setIsOpen }: IModal) {
-  const { connect, connectors } = useConnectors();
+  const { connect, connectors } = useConnect();
 
   return (
     <Dialog
@@ -33,7 +33,7 @@ export default function Modal({ isOpen, setIsOpen }: IModal) {
               <button
                 className="py-3 px-11 bg-brand-primary rounded-lg font-bold text-xl text-white capitalize w-full"
                 onClick={() => {
-                  connect(connector);
+                  connect({ connector });
                   setIsOpen(false);
                 }}
               >
