@@ -1,3 +1,5 @@
+"use client";
+
 /* eslint-disable @next/next/no-img-element */
 import Navbar from "@/components/Navbar";
 import { ibm } from "@/styles/fonts";
@@ -5,6 +7,8 @@ import { Disclosure } from "@headlessui/react";
 import clsx from "clsx";
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import toast from "react-hot-toast";
 
 const mockData = [
   {
@@ -70,9 +74,11 @@ export default function Profile() {
         </div>
         <div className="flex flex-row">
           <div className="flex flex-col basis-1/5 items-start px-10 py-9 border-r border-brand-text/25 h-full min-h-[80vh] flex-grow gap-y-5">
-            <p className="font-bold">Purchased Models</p>
-            <p className="font-bold opacity-50">API Keys</p>
-            <p className="font-bold opacity-50">Usage Statistics</p>
+            <p className="font-bold cursor-pointer">Purchased Models</p>
+            <p className="font-bold opacity-50 cursor-pointer">API Keys</p>
+            <p className="font-bold opacity-50 cursor-pointer">
+              Usage Statistics
+            </p>
           </div>
           <div className="flex flex-col basis-4/5 px-8 py-11">
             <p className="font-bold text-2xl mb-3">Your API Key</p>
@@ -88,44 +94,49 @@ export default function Profile() {
                 {apiKey}
               </pre>
 
-              <button
-                type="button"
-                className="js-clipboard p-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border  bg-slate-900 border-gray-700 text-white hover:bg-gray-800 focus:outline-none focus:ring-1 focus:ring-gray-600 shadow-sm disabled:opacity-50 disabled:pointer-events-none"
-                data-clipboard-target="#hs-clipboard-basic"
-                data-clipboard-action="copy"
-                data-clipboard-success-text="Copied"
+              <CopyToClipboard
+                text={apiKey}
+                onCopy={() => toast.success("Copied to clipboard!")}
               >
-                <svg
-                  className="js-clipboard-default w-4 h-4 group-hover:rotate-6 transition"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                <button
+                  type="button"
+                  className="js-clipboard p-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border  bg-slate-900 border-gray-700 text-white hover:bg-gray-800 focus:outline-none focus:ring-1 focus:ring-gray-600 shadow-sm disabled:opacity-50 disabled:pointer-events-none"
+                  data-clipboard-target="#hs-clipboard-basic"
+                  data-clipboard-action="copy"
+                  data-clipboard-success-text="Copied"
                 >
-                  <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
-                  <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
-                </svg>
+                  <svg
+                    className="js-clipboard-default w-4 h-4 group-hover:rotate-6 transition"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
+                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+                  </svg>
 
-                <svg
-                  className="js-clipboard-success hidden w-4 h-4 text-blue-600"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
-              </button>
+                  <svg
+                    className="js-clipboard-success hidden w-4 h-4 text-blue-600"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </button>
+              </CopyToClipboard>
             </div>
             <div className="flex flex-row w-full items-center justify-between mb-11 mt-12">
               <p className="font-bold text-2xl">Your Purchased Models</p>
