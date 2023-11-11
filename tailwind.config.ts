@@ -15,6 +15,8 @@ const config: Config = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
         hero: "url('/assets/background.png')",
         gradient: "url('/assets/gradient.png')",
+        "curved-gradient": "url('/assets/curved-gradient.png')",
+        "inverted-background": "url('/assets/inverted-background.png')",
         banner: "url('/assets/banner.png')",
       },
       colors: {
