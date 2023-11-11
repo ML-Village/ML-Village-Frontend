@@ -12,11 +12,13 @@
     "@headlessui/react": "^1.7.17",
     "@preline/overlay": "^2.0.0",
     "@starknet-react/core": "^1.0.4",
+    "axios": "^1.6.1",
     "clsx": "^2.0.0",
     "next": "^13.5.6",
     "preline": "^2.0.0",
     "react": "^18",
     "react-dom": "^18",
+    "react-loader-spinner": "^5.4.5",
     "shiki": "^0.14.5",
     "zustand": "^4.4.6"
   },
