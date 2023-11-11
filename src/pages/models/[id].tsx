@@ -243,20 +243,22 @@ export default function ModelInfo() {
                   {Object.keys(snippets).map((key) => (
                     <Tab.Panel key={key}>
                       <CopyBlock
-                        text={snippets[key as keyof typeof snippets].replace(
-                          "YOUR_UUID_API_KEY",
-                          apiKey || ""
-                        )}
-                        language={key}
-                        showLineNumbers={true}
-                        theme={atomOneDark}
-                        customStyle={{
-                          height: "250px",
-                          overflowY: "scroll",
-                          borderRadius: "5px",
-                          boxShadow: "1px 2px 3px rgba(0,0,0,0.35)",
+                        {...{
+                          language: key,
+                          showLineNumbers: true,
+                          text: snippets[key as keyof typeof snippets].replace(
+                            "YOUR_UUID_API_KEY",
+                            apiKey || ""
+                          ),
+                          theme: atomOneDark,
+                          customStyle: {
+                            height: "250px",
+                            overflowY: "scroll",
+                            borderRadius: "5px",
+                            boxShadow: "1px 2px 3px rgba(0,0,0,0.35)",
+                          },
+                          codeBlock: true,
                         }}
-                        codeBlock
                       />
                     </Tab.Panel>
                   ))}
