@@ -1,11 +1,11 @@
 import { InjectedConnector } from "starknetkit/injected";
 import { ArgentMobileConnector } from "starknetkit/argentMobile";
 import { WebWalletConnector } from "starknetkit/webwallet";
-import { mainnet } from "@starknet-react/chains";
+import { goerli } from "@starknet-react/chains";
 import { StarknetConfig, publicProvider } from "@starknet-react/core";
 
 export default function StarknetProvider({ children }: any) {
-  const chains = [mainnet];
+  const chains = [goerli];
   const connectors = [
     new InjectedConnector({ options: { id: "braavos" } }),
     new InjectedConnector({ options: { id: "argentX" } }),

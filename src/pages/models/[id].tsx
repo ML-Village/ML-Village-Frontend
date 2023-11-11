@@ -4,13 +4,19 @@ import { ibm } from "@/styles/fonts";
 import clsx from "clsx";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState, useEffect, use } from "react";
+import { useState, useEffect, use, useMemo } from "react";
 import { CopyBlock, atomOneDark } from "react-code-blocks";
 import dynamic from "next/dynamic";
 import { Tab } from "@headlessui/react";
 import { useAppStore } from "@/utils/store";
 import toast from "react-hot-toast";
 import CopyToClipboard from "react-copy-to-clipboard";
+import {
+  useAccount,
+  useWaitForTransaction,
+  useContractWrite,
+} from "@starknet-react/core";
+import { eth } from "@/contracts/eth";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 const snippets = {
@@ -78,6 +84,25 @@ export default function ModelInfo() {
   const [step, setStep] = useState(0);
   const [copy, setCopy] = useState(false);
   const [selected, setSelected] = useState<keyof typeof snippets>("bash");
+  const { address } = useAccount();
+  const [txHash, setTxHash] = useState<any>(undefined);
+  const { writeAsync } = useContractWrite({
+    calls: [
+      {
+        contractAddress: eth.address,
+        entrypoint: "transfer",
+        calldata: [
+          "0x066451c59fC789fB6F9a0FC438042B7D1C6576BbDd329d8FA3E053d5e0EF00c5",
+          1000000000000000,
+          0,
+        ],
+      },
+    ],
+  });
+  const { data, isLoading, error } = useWaitForTransaction({
+    hash: txHash,
+    watch: true,
+  });
 
   const chartConfig = {
     options: {
@@ -121,13 +146,32 @@ export default function ModelInfo() {
     ],
   };
 
-  const purchaseModel = () => {
+  const purchaseModel = async () => {
     // We need to do a few things
     // Check if wallet is connected, if not, we prompt them to connect
     // Make a payment
+    if (address) {
+      try {
+        const res = await writeAsync();
+        setTxHash(res.transaction_hash);
+      } catch (err) {
+        toast.error((err as any).message);
+      }
+    } else {
+      toast.error("Please connect your wallet first!");
+    }
     // Make an API call
-    setStep(1);
   };
+
+  useEffect(() => {
+    if (!isLoading) {
+      if (data) {
+        console.log(data);
+        toast.success("Model purchased!");
+        setStep(1);
+      }
+    }
+  }, [data, isLoading, error]);
 
   return (
     <main
@@ -257,7 +301,7 @@ export default function ModelInfo() {
                             borderRadius: "5px",
                             boxShadow: "1px 2px 3px rgba(0,0,0,0.35)",
                           },
-                          codeBlock: true,
+                          codeblock: true,
                         }}
                       />
                     </Tab.Panel>
@@ -283,7 +327,11 @@ export default function ModelInfo() {
                   Use Model
                 </button>
               </CopyToClipboard>
-              {copy && <p className="text-sm italic">Copied to clipboard!</p>}
+              {copy ? (
+                <p className="text-sm italic">Copied to clipboard!</p>
+              ) : (
+                <></>
+              )}
             </div>
           </div>
         )}
