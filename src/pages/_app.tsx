@@ -3,22 +3,17 @@
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { useEffect } from "react";
-import { StarknetConfig, InjectedConnector } from "@starknet-react/core";
 import { Toaster } from "react-hot-toast";
 import Script from "next/script";
+import StarknetProvider from "@/providers/StarknetProvider";
 
 export default function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
     import("preline");
   }, []);
 
-  const connectors = [
-    new InjectedConnector({ options: { id: "braavos" } }),
-    new InjectedConnector({ options: { id: "argentX" } }),
-  ];
-
   return (
-    <StarknetConfig connectors={connectors} autoConnect>
+    <StarknetProvider>
       <Script src="./node_modules/clipboard/dist/clipboard.min.js"></Script>
       <Script src="./node_modules/preline/dist/preline.js"></Script>
       <Script id="clipboard">
@@ -89,6 +84,6 @@ export default function App({ Component, pageProps }: AppProps) {
       </Script>
       <Component {...pageProps} />
       <Toaster position="top-center" reverseOrder={false} />
-    </StarknetConfig>
+    </StarknetProvider>
   );
 }

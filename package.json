@@ -11,7 +11,8 @@
   "dependencies": {
     "@headlessui/react": "^1.7.17",
     "@preline/overlay": "^2.0.0",
-    "@starknet-react/core": "^1.0.4",
+    "@starknet-react/chains": "^0.1.0-next.0",
+    "@starknet-react/core": "^2.0.0-next.3",
     "apexcharts": "^3.44.0",
     "axios": "^1.6.1",
     "clipboard": "^2.0.11",
@@ -26,6 +27,8 @@
     "react-hot-toast": "^2.4.1",
     "react-loader-spinner": "^5.4.5",
     "shiki": "^0.14.5",
+    "starknet": "^5.19.5",
+    "starknetkit": "^1.0.12",
     "zustand": "^4.4.6"
   },
   "devDependencies": {
