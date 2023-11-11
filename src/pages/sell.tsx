@@ -3,8 +3,11 @@ import Navbar from "@/components/Navbar";
 import { ibm } from "@/styles/fonts";
 import clsx from "clsx";
 import Link from "next/link";
-import { useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { Triangle } from "react-loader-spinner";
+import Lottie from "react-lottie";
+import ReactCanvasConfetti from "react-canvas-confetti";
+import * as animationData from "../../public/assets/tick.json";
 
 export default function Sell() {
   const [data, setData] = useState({
@@ -40,9 +43,72 @@ export default function Sell() {
     setTimeout(() => {
       setIsLoading(false);
       setStep(1);
+      fire();
       setModelId("123456789");
-    }, 5000);
+    }, 300);
   };
+
+  const defaultOptions = {
+    loop: false,
+    autoplay: true,
+    animationData: animationData,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
+
+  const canvasStyles = {
+    position: "fixed",
+    pointerEvents: "none",
+    width: "100%",
+    height: "100%",
+    top: 0,
+    left: 0,
+  };
+
+  const refAnimationInstance = useRef<any>(null);
+
+  const getInstance = useCallback((instance: null) => {
+    refAnimationInstance.current = instance;
+  }, []);
+
+  const makeShot = useCallback((particleRatio: number, opts: any) => {
+    refAnimationInstance.current &&
+      refAnimationInstance.current({
+        ...opts,
+        origin: { y: 0.7 },
+        particleCount: Math.floor(200 * particleRatio),
+      });
+  }, []);
+
+  const fire = useCallback(() => {
+    makeShot(0.25, {
+      spread: 26,
+      startVelocity: 55,
+    });
+
+    makeShot(0.2, {
+      spread: 60,
+    });
+
+    makeShot(0.35, {
+      spread: 100,
+      decay: 0.91,
+      scalar: 0.8,
+    });
+
+    makeShot(0.1, {
+      spread: 120,
+      startVelocity: 25,
+      decay: 0.92,
+      scalar: 1.2,
+    });
+
+    makeShot(0.1, {
+      spread: 120,
+      startVelocity: 45,
+    });
+  }, [makeShot]);
 
   return (
     <main
@@ -160,10 +226,10 @@ export default function Sell() {
       ) : (
         <div
           className={clsx(
-            "flex flex-col min-w-full min-h-screen bg-brand-offwhite text-brand-text px-24 py-14 items-center justify-center overflow-hidden relative"
+            "flex flex-col min-w-full min-h-screen bg-inverted-background text-brand-text px-24 py-14 items-center justify-center overflow-hidden relative"
           )}
         >
-          <img src="/assets/tick.png" alt="Success" />
+          <Lottie options={defaultOptions} height={128} width={128} />
           <h1 className="font-bold text-4xl mb-4 w-full max-w-3xl text-center mt-8">
             {data.name} has been setup successfully!
           </h1>
@@ -187,8 +253,17 @@ export default function Sell() {
               Explore all models
             </button>
           </Link>
+          <img
+            src="/assets/curved-gradient.png"
+            alt=""
+            className="absolute w-screen bottom-0 left-0 pointer-none"
+          />
         </div>
       )}
+      <ReactCanvasConfetti
+        refConfetti={getInstance as any}
+        style={canvasStyles}
+      />
     </main>
   );
 }
