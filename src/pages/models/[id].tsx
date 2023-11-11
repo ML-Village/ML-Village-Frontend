@@ -4,29 +4,10 @@ import { ibm } from "@/styles/fonts";
 import clsx from "clsx";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
-import { Triangle } from "react-loader-spinner";
 
 export default function ModelInfo() {
   const router = useRouter();
   const { id } = router.query;
-
-  const [data, setData] = useState({
-    name: "",
-    description: "",
-    price: 0,
-    file: null,
-  });
-  const [step, setStep] = useState(0);
-  const [modelId, setModelId] = useState("");
-
-  const updateField = (value: any, name: string) => {
-    console.log("update Field")
-  };
-
-  const submit = () => {
-    console.log("submit");
-  };
 
   return (
     <main
@@ -87,6 +68,7 @@ export default function ModelInfo() {
             <div className="mt-8 text-lg">Model Subscription Price</div>
             <div className="font-bold text-lg mb-5">$420.69/mth</div>
 
+            
             <button
                 type="button"
                 className="py-3 px-4 inline-flex items-center 
