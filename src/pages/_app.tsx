@@ -18,7 +18,7 @@ export default function App({ Component, pageProps }: AppProps) {
   ];
 
   return (
-    <StarknetConfig connectors={connectors}>
+    <StarknetConfig connectors={connectors} autoConnect>
       <Script src="./node_modules/clipboard/dist/clipboard.min.js"></Script>
       <Script src="./node_modules/preline/dist/preline.js"></Script>
       <Script id="clipboard">
