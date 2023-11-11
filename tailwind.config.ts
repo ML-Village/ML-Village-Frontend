@@ -19,7 +19,7 @@ const config: Config = {
       },
       colors: {
         brand: {
-          offwhite: "#F7F7F7",
+          offwhite: "#F0F8FF",
           text: "#333333",
           primary: "#0B98FF",
           secondary: "#012677",

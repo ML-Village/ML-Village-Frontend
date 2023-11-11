@@ -70,10 +70,95 @@ export default function Profile() {
           </div>
           <div className="flex flex-col basis-4/5 px-8 py-11">
             <p className="font-bold text-2xl mb-3">Your API Key</p>
-            <p>
+            <p className="mb-5">
               This is what you need to use your purchased models. Pass it in the
               API call within the header. Please keep this private.{" "}
             </p>
+            <div className="inline-flex items-center gap-x-3 bg-brand-text rounded-lg px-4 py-2 w-full justify-between max-w-lg">
+              <pre
+                id="hs-clipboard-basic"
+                className="text-sm font-medium text-white"
+              >
+                {apiKey}
+              </pre>
+
+              <button
+                type="button"
+                className="js-clipboard p-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border  bg-slate-900 border-gray-700 text-white hover:bg-gray-800 focus:outline-none focus:ring-1 focus:ring-gray-600 shadow-sm disabled:opacity-50 disabled:pointer-events-none"
+                data-clipboard-target="#hs-clipboard-basic"
+                data-clipboard-action="copy"
+                data-clipboard-success-text="Copied"
+              >
+                <svg
+                  className="js-clipboard-default w-4 h-4 group-hover:rotate-6 transition"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
+                  <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+                </svg>
+
+                <svg
+                  className="js-clipboard-success hidden w-4 h-4 text-blue-600"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="flex flex-row w-full items-center justify-between mb-11 mt-12">
+              <p className="font-bold text-2xl">Your Purchased Models</p>
+              <div className="relative py-1 px-4 max-w-md w-full bg-white flex flex-row border border-brand-secondary rounded-lg text-sm focus:border-brand-primary focus:ring-brand-primary disabled:opacity-50 disabled:pointer-events-none">
+                <img
+                  src="/assets/icons/search.svg"
+                  alt="Search"
+                  className="w-4"
+                />
+                <input
+                  type="text"
+                  id="input-label"
+                  className="border-transparent focus:ring-0 w-full focus:outline-none border-none"
+                  placeholder="Search for a model"
+                  onChange={(e) => filter(e.target.value)}
+                ></input>
+              </div>
+            </div>
+            <div className="grid grid-cols-4 w-full gap-x-6">
+              {mockData.map((model, index) => {
+                return (
+                  <Link href={`/models/${model.id}`} key={model.id}>
+                    <div className="flex flex-col rounded-lg overflow-hidden drop-shadow-sm cursor-pointer">
+                      <img
+                        src={`/assets/models/Model ${index}.png`}
+                        alt={model.name}
+                      />
+                      <div className="flex flex-col w-full h-full p-4 text-white gap-y-1 bg-brand-tertiary">
+                        <p className="font-bold">{model.name}</p>
+                        <p className="text-sm">{model.description}</p>
+                        <p className="text-sm">
+                          ${model.price.toFixed(2)} per month
+                        </p>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
