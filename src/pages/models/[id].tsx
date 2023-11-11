@@ -4,10 +4,40 @@ import { ibm } from "@/styles/fonts";
 import clsx from "clsx";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import Chart from 'react-apexcharts'
 
 export default function ModelInfo() {
   const router = useRouter();
   const { id } = router.query;
+
+  const chartConfig = {
+    options: {
+        chart: {
+        height: 350,
+        type: 'area'
+      },
+      dataLabels: {
+        enabled: false
+      },
+      stroke: {
+        curve: 'smooth'
+      },
+      xaxis: {
+        type: 'datetime',
+        categories: ["2018-09-19T00:00:00.000Z", "2018-09-19T01:30:00.000Z", "2018-09-19T02:30:00.000Z", "2018-09-19T03:30:00.000Z", "2018-09-19T04:30:00.000Z", "2018-09-19T05:30:00.000Z", "2018-09-19T06:30:00.000Z"]
+      },
+      tooltip: {
+        x: {
+          format: 'dd/MM/yy HH:mm'
+        },
+      },
+    },
+    series: [{
+      name: 'series-1',
+      data: [30, 40, 35, 50, 49, 60, 70, 91, 125]
+    }]
+  }
+
 
   return (
     <main
@@ -27,10 +57,10 @@ export default function ModelInfo() {
           
           
           <div className="px-16">
-            <h1 className="font-bold text-4xl mb-4 w-full max-w-3xl">
+            <h1 className="font-bold text-4xl mb-3 w-full">
             GPT-420
             </h1>
-            <p className="max-w-3xl mb-4">
+            <p className="my-3 text-sm">
               Upload your ONNX file into our platform, and we will handle the
               rest. Everything from automatic conversion, model runs, inference
               and proof generation, we got it covered.
@@ -38,7 +68,7 @@ export default function ModelInfo() {
 
 
             {/* metrics bar */}
-            <div className="grid grid-cols-3 mb-8">
+            <div className="grid grid-cols-3 mb-3">
               <div>
                 <p className="">Model Type</p>
                 <p className="font-bold">Classifier</p>
@@ -57,16 +87,18 @@ export default function ModelInfo() {
             </div>
 
             {/* Statistics Chart */}
-            <div>
+            <div className="my-2">
+              <h3 className="font-bold text-xl">
+              Statistics
+              </h3>
+              {/* chart itself */}
+              <Chart options={chartConfig.options} series={chartConfig.series} type="bar" width={450} height={250} />
+            </div>
 
-            <h3 className="font-bold text-xl">
-            Statistics
-            </h3>
+              
 
-            <img src="" alt=""/>
-
-            <div className="mt-8 text-lg">Model Subscription Price</div>
-            <div className="font-bold text-lg mb-5">$420.69/mth</div>
+            <div className="text-lg">Model Subscription Price</div>
+            <div className="font-bold text-lg mb-3">$420.69/mth</div>
 
             
             <button
@@ -80,7 +112,7 @@ export default function ModelInfo() {
                 Purchase Model
               </button>
 
-            </div>
+            
           
           </div>
         </div>
