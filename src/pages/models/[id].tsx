@@ -166,7 +166,6 @@ export default function ModelInfo() {
   useEffect(() => {
     if (!isLoading) {
       if (data) {
-        console.log(data);
         toast.success("Model purchased!");
         setStep(1);
       }
@@ -199,9 +198,7 @@ export default function ModelInfo() {
           <div className="px-16">
             <h1 className="font-bold text-4xl mb-4 w-full">GPT-420</h1>
             <p className="mb-8 text-sm">
-              Upload your ONNX file into our platform, and we will handle the
-              rest. Everything from automatic conversion, model runs, inference
-              and proof generation, we got it covered.
+              Here are some statistics about the GPT-420 ML model.
             </p>
 
             {/* metrics bar */}
