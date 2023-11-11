@@ -5,6 +5,7 @@ import Modal from "./Modal";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import clsx from "clsx";
+import Link from "next/link";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,9 +23,9 @@ export default function Navbar() {
         aria-label="Global"
       >
         <div className="flex w-full items-center justify-between">
-          <a className="flex-none text-xl font-semibold" href="#">
+          <Link className="flex-none text-xl font-semibold" href="/">
             ML Village
-          </a>
+          </Link>
           <div className="sm:hidden">
             <button
               type="button"

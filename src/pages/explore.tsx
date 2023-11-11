@@ -96,7 +96,7 @@ export default function Explore() {
                 />
               </Disclosure.Button>
               <Disclosure.Panel className="text-brand-text">
-                Come on... you&apos;re in Web3!
+                👉👈 Come on... you&apos;re in Web3!
               </Disclosure.Panel>
             </Disclosure>
           </div>
