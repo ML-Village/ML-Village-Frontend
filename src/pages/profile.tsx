@@ -3,6 +3,7 @@
 /* eslint-disable @next/next/no-img-element */
 import Navbar from "@/components/Navbar";
 import { ibm } from "@/styles/fonts";
+import { useAppStore } from "@/utils/store";
 import { Disclosure } from "@headlessui/react";
 import clsx from "clsx";
 import Link from "next/link";
@@ -38,7 +39,7 @@ const mockData = [
 ];
 
 export default function Profile() {
-  const [apiKey, setApiKey] = useState("askdajsd");
+  const { apiKey } = useAppStore();
   const [filter, setFilter] = useState("");
   const filteredData = useMemo(() => {
     if (filter) {
@@ -95,7 +96,7 @@ export default function Profile() {
               </pre>
 
               <CopyToClipboard
-                text={apiKey}
+                text={apiKey || ""}
                 onCopy={() => toast.success("Copied to clipboard!")}
               >
                 <button

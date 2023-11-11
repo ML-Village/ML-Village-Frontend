@@ -32,7 +32,10 @@ export default function Modal({ isOpen, setIsOpen }: IModal) {
             <li key={connector.id}>
               <button
                 className="py-3 px-11 bg-brand-primary rounded-lg font-bold text-xl text-white capitalize w-full"
-                onClick={() => connect(connector)}
+                onClick={() => {
+                  connect(connector);
+                  setIsOpen(false);
+                }}
               >
                 {connector.id}
               </button>

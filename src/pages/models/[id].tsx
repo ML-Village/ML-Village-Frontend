@@ -121,6 +121,14 @@ export default function ModelInfo() {
     ],
   };
 
+  const purchaseModel = () => {
+    // We need to do a few things
+    // Check if wallet is connected, if not, we prompt them to connect
+    // Make a payment
+    // Make an API call
+    setStep(1);
+  };
+
   return (
     <main
       className={clsx(
@@ -193,7 +201,7 @@ export default function ModelInfo() {
               rounded-lg border border-transparent 
               bg-brand-primary text-white 
               hover:bg-blue-600 disabled:opacity-50 disabled:pointer-events-none"
-              onClick={() => setStep(1)}
+              onClick={() => purchaseModel()}
             >
               Purchase Model
             </button>
@@ -246,10 +254,9 @@ export default function ModelInfo() {
                           height: "250px",
                           overflowY: "scroll",
                           borderRadius: "5px",
-                          padding: "1rem",
                           boxShadow: "1px 2px 3px rgba(0,0,0,0.35)",
-                          fontSize: "0.75rem",
                         }}
+                        codeBlock
                       />
                     </Tab.Panel>
                   ))}
