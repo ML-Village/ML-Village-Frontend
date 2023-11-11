@@ -18,6 +18,7 @@ export default function StarknetProvider({ children }: any) {
       chains={chains}
       provider={publicProvider()}
       connectors={connectors as any}
+      autoConnect
     >
       {children}
     </StarknetConfig>

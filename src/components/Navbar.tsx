@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { ibm } from "@/styles/fonts";
-import { useAccount, useConnectors } from "@starknet-react/core";
+import { useAccount, useConnect } from "@starknet-react/core";
 import Modal from "./Modal";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
