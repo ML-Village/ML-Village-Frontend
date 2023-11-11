@@ -4,7 +4,7 @@ import { ibm } from "@/styles/fonts";
 import { Disclosure } from "@headlessui/react";
 import clsx from "clsx";
 import Link from "next/link";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 const mockData = [
   {
@@ -35,9 +35,15 @@ const mockData = [
 
 export default function Profile() {
   const [apiKey, setApiKey] = useState("askdajsd");
-  const filter = (value: string) => {
-    // Do nothing for now
-  };
+  const [filter, setFilter] = useState("");
+  const filteredData = useMemo(() => {
+    if (filter) {
+      return mockData.filter((model) =>
+        model.name.toLowerCase().includes(filter.toLowerCase())
+      );
+    }
+    return mockData;
+  }, [filter]);
 
   return (
     <main
@@ -134,12 +140,12 @@ export default function Profile() {
                   id="input-label"
                   className="border-transparent focus:ring-0 w-full focus:outline-none border-none"
                   placeholder="Search for a model"
-                  onChange={(e) => filter(e.target.value)}
+                  onChange={(e) => setFilter(e.target.value)}
                 ></input>
               </div>
             </div>
             <div className="grid grid-cols-4 w-full gap-x-6">
-              {mockData.map((model, index) => {
+              {filteredData.map((model, index) => {
                 return (
                   <Link href={`/models/${model.id}`} key={model.id}>
                     <div className="flex flex-col rounded-lg overflow-hidden drop-shadow-sm cursor-pointer">
