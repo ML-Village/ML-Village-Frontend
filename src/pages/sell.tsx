@@ -40,6 +40,7 @@ export default function Sell() {
     setTimeout(() => {
       setIsLoading(false);
       setStep(1);
+      setModelId("123456789");
     }, 5000);
   };
 

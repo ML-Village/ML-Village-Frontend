@@ -1,10 +1,14 @@
+"use client";
+
 /* eslint-disable @next/next/no-img-element */
 import Navbar from "@/components/Navbar";
 import { ibm } from "@/styles/fonts";
 import { Disclosure } from "@headlessui/react";
 import clsx from "clsx";
 import Link from "next/link";
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import toast from "react-hot-toast";
 
 const mockData = [
   {
@@ -33,7 +37,8 @@ const mockData = [
   },
 ];
 
-export default function Explore() {
+export default function Profile() {
+  const [apiKey, setApiKey] = useState("askdajsd");
   const [filter, setFilter] = useState("");
   const filteredData = useMemo(() => {
     if (filter) {
@@ -68,40 +73,73 @@ export default function Explore() {
           </p>
         </div>
         <div className="flex flex-row">
-          <div className="flex flex-col basis-1/5 items-start px-10 py-9 border-r border-brand-text/25 h-full min-h-[80vh] flex-grow">
-            <Disclosure>
-              <Disclosure.Button className="py-2 flex flex-row items-center justify-between w-full">
-                <p className="text-brand-text font-bold">Filters</p>
-                <img
-                  src="/assets/icons/caret.svg"
-                  alt="Caret"
-                  className="w-4"
-                />
-              </Disclosure.Button>
-              <Disclosure.Panel className="text-brand-text">
-                <ul className="flex flex-col gap-y-2">
-                  <li className="cursor-pointer">Classification</li>
-                  <li className="cursor-pointer">Regression</li>
-                </ul>
-              </Disclosure.Panel>
-            </Disclosure>
-            <hr className="border-brand-text/25 my-4 border w-full" />
-            <Disclosure>
-              <Disclosure.Button className="py-2 flex flex-row items-center justify-between w-full">
-                <p className="text-brand-text font-bold">Price</p>
-                <img
-                  src="/assets/icons/caret.svg"
-                  alt="Caret"
-                  className="w-4"
-                />
-              </Disclosure.Button>
-              <Disclosure.Panel className="text-brand-text">
-                Come on... you&apos;re in Web3!
-              </Disclosure.Panel>
-            </Disclosure>
+          <div className="flex flex-col basis-1/5 items-start px-10 py-9 border-r border-brand-text/25 h-full min-h-[80vh] flex-grow gap-y-5">
+            <p className="font-bold cursor-pointer">Purchased Models</p>
+            <p className="font-bold opacity-50 cursor-pointer">API Keys</p>
+            <p className="font-bold opacity-50 cursor-pointer">
+              Usage Statistics
+            </p>
           </div>
           <div className="flex flex-col basis-4/5 px-8 py-11">
-            <div className="flex flex-row w-full items-end justify-end mb-11">
+            <p className="font-bold text-2xl mb-3">Your API Key</p>
+            <p className="mb-5">
+              This is what you need to use your purchased models. Pass it in the
+              API call within the header. Please keep this private.{" "}
+            </p>
+            <div className="inline-flex items-center gap-x-3 bg-brand-text rounded-lg px-4 py-2 w-full justify-between max-w-lg">
+              <pre
+                id="hs-clipboard-basic"
+                className="text-sm font-medium text-white"
+              >
+                {apiKey}
+              </pre>
+
+              <CopyToClipboard
+                text={apiKey}
+                onCopy={() => toast.success("Copied to clipboard!")}
+              >
+                <button
+                  type="button"
+                  className="js-clipboard p-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border  bg-slate-900 border-gray-700 text-white hover:bg-gray-800 focus:outline-none focus:ring-1 focus:ring-gray-600 shadow-sm disabled:opacity-50 disabled:pointer-events-none"
+                  data-clipboard-target="#hs-clipboard-basic"
+                  data-clipboard-action="copy"
+                  data-clipboard-success-text="Copied"
+                >
+                  <svg
+                    className="js-clipboard-default w-4 h-4 group-hover:rotate-6 transition"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
+                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+                  </svg>
+
+                  <svg
+                    className="js-clipboard-success hidden w-4 h-4 text-blue-600"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </button>
+              </CopyToClipboard>
+            </div>
+            <div className="flex flex-row w-full items-center justify-between mb-11 mt-12">
+              <p className="font-bold text-2xl">Your Purchased Models</p>
               <div className="relative py-1 px-4 max-w-md w-full bg-white flex flex-row border border-brand-secondary rounded-lg text-sm focus:border-brand-primary focus:ring-brand-primary disabled:opacity-50 disabled:pointer-events-none">
                 <img
                   src="/assets/icons/search.svg"
