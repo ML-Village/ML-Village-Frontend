@@ -247,8 +247,7 @@ export default function ModelInfo() {
       ) : null}
       {hasHydrated && model ? (
         <div
-          className="container grid grid-cols-2 justify-center items-center mx-auto
-        px-20 pt-8
+          className="container grid grid-cols-2 justify-center items-center md:px-4 xl:px-20 pt-8
         "
         >
           <div
@@ -313,7 +312,7 @@ export default function ModelInfo() {
               </button>
             </div>
           ) : (
-            <div className="px-16">
+            <div className="pl-8 xl:px-16">
               <h1 className="font-bold text-4xl mb-4 w-full">
                 Integrate {model.name} into your app
               </h1>
