@@ -1,9 +1,18 @@
 /* eslint-disable @next/next/no-img-element */
 import { ibm } from "@/styles/fonts";
+import { useAppStore } from "@/utils/store";
 import clsx from "clsx";
 import Link from "next/link";
+import { useEffect } from "react";
 
 export default function Home() {
+  const { setApiKey } = useAppStore();
+  useEffect(() => {
+    setApiKey(
+      "84df0b8493dd4649c51fed0c0a6e2d4c09ea504437116f6de98176de1f4e2778"
+    );
+  }, []);
+
   return (
     <main
       className={clsx(

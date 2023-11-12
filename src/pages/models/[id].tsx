@@ -77,8 +77,19 @@ async fn main() -> Result<(), reqwest::Error> {
   `,
 };
 
+const useHasHydrated = () => {
+  const [hasHydrated, setHasHydrated] = useState<boolean>(false);
+
+  useEffect(() => {
+    setHasHydrated(true);
+  }, []);
+
+  return hasHydrated;
+};
+
 export default function ModelInfo() {
   const router = useRouter();
+  const hasHydrated = useHasHydrated();
   const { apiKey } = useAppStore();
   const { id } = router.query;
   const [step, setStep] = useState(0);
@@ -180,159 +191,161 @@ export default function ModelInfo() {
       )}
     >
       <Navbar />
-
-      <div
-        className="container grid grid-cols-2 justify-center items-center mx-auto
+      {hasHydrated ? (
+        <div
+          className="container grid grid-cols-2 justify-center items-center mx-auto
         px-20 pt-8
         "
-      >
-        <div
-          className="
+        >
+          <div
+            className="
           rounded-lg w-auto h-auto overflow-hidden
           "
-        >
-          <img src="/assets/models/Model 3.png" alt="" />
-        </div>
+          >
+            <img src="/assets/models/Model 3.png" alt="" />
+          </div>
 
-        {step === 0 ? (
-          <div className="px-16">
-            <h1 className="font-bold text-4xl mb-4 w-full">GPT-420</h1>
-            <p className="mb-8 text-sm">
-              Here are some statistics about the GPT-420 ML model.
-            </p>
+          {step === 0 ? (
+            <div className="px-16">
+              <h1 className="font-bold text-4xl mb-4 w-full">GPT-420</h1>
+              <p className="mb-8 text-sm">
+                Here are some statistics about the GPT-420 ML model.
+              </p>
 
-            {/* metrics bar */}
-            <div className="grid grid-cols-3 mb-8">
-              <div>
-                <p className="mb-2">Model Type</p>
-                <p className="font-bold">Classifier</p>
+              {/* metrics bar */}
+              <div className="grid grid-cols-3 mb-8">
+                <div>
+                  <p className="mb-2">Model Type</p>
+                  <p className="font-bold">Classifier</p>
+                </div>
+
+                <div>
+                  <p className="mb-2">Training Data Size</p>
+                  <p className="font-bold">256 GB</p>
+                </div>
+
+                <div>
+                  <p className="mb-2">Accuracy</p>
+                  <p className="font-bold">99.2%</p>
+                </div>
               </div>
 
-              <div>
-                <p className="mb-2">Training Data Size</p>
-                <p className="font-bold">256 GB</p>
+              {/* Statistics Chart */}
+              <div className="mb-8">
+                <h3 className="font-bold text-xl mb-4">Statistics</h3>
+                {/* chart itself */}
+                <Chart
+                  options={chartConfig.options as ApexCharts.ApexOptions}
+                  series={chartConfig.series}
+                  type="area"
+                  width={450}
+                  height={250}
+                />
               </div>
 
-              <div>
-                <p className="mb-2">Accuracy</p>
-                <p className="font-bold">99.2%</p>
-              </div>
-            </div>
+              <div className="text-lg mb-2">Model Subscription Price</div>
+              <div className="font-bold text-lg mb-8">$420.69/mth</div>
 
-            {/* Statistics Chart */}
-            <div className="mb-8">
-              <h3 className="font-bold text-xl mb-4">Statistics</h3>
-              {/* chart itself */}
-              <Chart
-                options={chartConfig.options as ApexCharts.ApexOptions}
-                series={chartConfig.series}
-                type="area"
-                width={450}
-                height={250}
-              />
-            </div>
-
-            <div className="text-lg mb-2">Model Subscription Price</div>
-            <div className="font-bold text-lg mb-8">$420.69/mth</div>
-
-            <button
-              type="button"
-              className="py-3 px-4 inline-flex items-center 
+              <button
+                type="button"
+                className="py-3 px-4 inline-flex items-center 
               gap-x-2 text-sm font-semibold 
               rounded-lg border border-transparent 
               bg-brand-primary text-white 
               hover:bg-blue-600 disabled:opacity-50 disabled:pointer-events-none"
-              onClick={() => purchaseModel()}
-            >
-              Purchase Model
-            </button>
-          </div>
-        ) : (
-          <div className="px-16">
-            <h1 className="font-bold text-4xl mb-4 w-full">
-              Integrate GPT-420 into your app
-            </h1>
-            <p className="mb-8 text-sm">
-              ML Village makes it easy for you to use ML models in your
-              application without any fussy setups, installations and hardware
-              infrastructure. Just copy the code below to get started.
-            </p>
-
-            <div className="mb-9">
-              <Tab.Group>
-                <Tab.List className={"flex flex-row items-center mb-1"}>
-                  {Object.keys(snippets).map((key) => (
-                    <Tab
-                      key={key}
-                      className={({ selected }) => {
-                        if (selected) {
-                          setSelected(key as keyof typeof snippets);
-                        }
-                        return clsx(
-                          "capitalize px-4 py-2 font-bold w-full text-sm leading-5 text-brand-text",
-                          selected
-                            ? "border-b-2 border-brand-primary"
-                            : "text-brand-text/50 hover:bg-white/[0.12] hover:border-brand-primary hover:border-b-2"
-                        );
-                      }}
-                    >
-                      {key}
-                    </Tab>
-                  ))}
-                </Tab.List>
-                <Tab.Panels>
-                  {Object.keys(snippets).map((key) => (
-                    <Tab.Panel key={key}>
-                      <CopyBlock
-                        {...{
-                          language: key,
-                          showLineNumbers: true,
-                          text: snippets[key as keyof typeof snippets].replace(
-                            "YOUR_UUID_API_KEY",
-                            apiKey || ""
-                          ),
-                          theme: atomOneDark,
-                          customStyle: {
-                            height: "250px",
-                            overflowY: "scroll",
-                            borderRadius: "5px",
-                            boxShadow: "1px 2px 3px rgba(0,0,0,0.35)",
-                          },
-                          codeblock: true,
-                        }}
-                      />
-                    </Tab.Panel>
-                  ))}
-                </Tab.Panels>
-              </Tab.Group>
+                onClick={() => purchaseModel()}
+              >
+                Purchase Model
+              </button>
             </div>
+          ) : (
+            <div className="px-16">
+              <h1 className="font-bold text-4xl mb-4 w-full">
+                Integrate GPT-420 into your app
+              </h1>
+              <p className="mb-8 text-sm">
+                ML Village makes it easy for you to use ML models in your
+                application without any fussy setups, installations and hardware
+                infrastructure. Just copy the code below to get started.
+              </p>
 
-            <div className="flex flex-row gap-x-4 items-center">
-              <CopyToClipboard text={snippets[selected]}>
-                <button
-                  type="button"
-                  className="py-3 px-4 inline-flex items-center 
+              <div className="mb-9">
+                <Tab.Group>
+                  <Tab.List className={"flex flex-row items-center mb-1"}>
+                    {Object.keys(snippets).map((key) => (
+                      <Tab
+                        key={key}
+                        className={({ selected }) => {
+                          if (selected) {
+                            setSelected(key as keyof typeof snippets);
+                          }
+                          return clsx(
+                            "capitalize px-4 py-2 font-bold w-full text-sm leading-5 text-brand-text",
+                            selected
+                              ? "border-b-2 border-brand-primary"
+                              : "text-brand-text/50 hover:bg-white/[0.12] hover:border-brand-primary hover:border-b-2"
+                          );
+                        }}
+                      >
+                        {key}
+                      </Tab>
+                    ))}
+                  </Tab.List>
+                  <Tab.Panels>
+                    {Object.keys(snippets).map((key) => (
+                      <Tab.Panel key={key}>
+                        <CopyBlock
+                          {...{
+                            language: key,
+                            showLineNumbers: true,
+                            text: snippets[
+                              key as keyof typeof snippets
+                            ].replace("YOUR_UUID_API_KEY", apiKey || ""),
+                            theme: atomOneDark,
+                            customStyle: {
+                              height: "250px",
+                              overflowY: "scroll",
+                              borderRadius: "5px",
+                              boxShadow: "1px 2px 3px rgba(0,0,0,0.35)",
+                            },
+                            codeblock: true,
+                          }}
+                        />
+                      </Tab.Panel>
+                    ))}
+                  </Tab.Panels>
+                </Tab.Group>
+              </div>
+
+              <div className="flex flex-row gap-x-4 items-center">
+                <CopyToClipboard text={snippets[selected]}>
+                  <button
+                    type="button"
+                    className="py-3 px-4 inline-flex items-center 
                 gap-x-2 text-sm font-semibold 
                 rounded-lg border border-transparent 
                 bg-brand-primary text-white 
                 hover:bg-blue-600 disabled:opacity-50 disabled:pointer-events-none"
-                  onClick={() => {
-                    setCopy(true);
-                    toast.success("Copied to clipboard!");
-                  }}
-                >
-                  Use Model
-                </button>
-              </CopyToClipboard>
-              {copy ? (
-                <p className="text-sm italic">Copied to clipboard!</p>
-              ) : (
-                <></>
-              )}
+                    onClick={() => {
+                      setCopy(true);
+                      toast.success("Copied to clipboard!");
+                    }}
+                  >
+                    Use Model
+                  </button>
+                </CopyToClipboard>
+                {copy ? (
+                  <p className="text-sm italic">Copied to clipboard!</p>
+                ) : (
+                  <></>
+                )}
+              </div>
             </div>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      ) : (
+        <></>
+      )}
     </main>
   );
 }
