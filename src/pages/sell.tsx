@@ -8,6 +8,8 @@ import { Triangle } from "react-loader-spinner";
 import Lottie from "react-lottie";
 import ReactCanvasConfetti from "react-canvas-confetti";
 import * as animationData from "../../public/assets/tick.json";
+import { API } from "@/utils/axios";
+import toast from "react-hot-toast";
 
 export default function Sell() {
   const [data, setData] = useState({
@@ -37,15 +39,35 @@ export default function Sell() {
     }
   };
 
-  const submit = () => {
+  const submit = async () => {
     console.log(data);
     setIsLoading(true);
-    setTimeout(() => {
+    try {
+      const res = await API.postForm("/upload_model", {
+        name: data.name,
+        description: data.description,
+        price: String(data.price),
+        onnx_file: data.file,
+      });
+      console.log(res.data);
+
+      if (res.data) {
+        setModelId(res.data.model_id);
+        setStep(1);
+        fire();
+      }
+    } catch (err) {
+      toast.error("Something went wrong");
+    } finally {
       setIsLoading(false);
-      setStep(1);
-      fire();
-      setModelId("123456789");
-    }, 300);
+    }
+
+    // setTimeout(() => {
+    //   setIsLoading(false);
+    //   setStep(1);
+    //   fire();
+    //   setModelId("123456789");
+    // }, 300);
   };
 
   const defaultOptions = {
@@ -167,10 +189,7 @@ export default function Sell() {
           "
               onChange={(e) => updateField(e.target.files, "file")}
             />
-            <label
-              htmlFor="input-label"
-              className="block text-lg font-bold mb-1 mt-9"
-            >
+            <label htmlFor="name" className="block text-lg font-bold mb-1 mt-9">
               Model Name
             </label>
             <p className="mb-3">
@@ -179,13 +198,13 @@ export default function Sell() {
             </p>
             <input
               type="text"
-              id="input-label"
+              id="name"
               className="py-3 px-4 block w-full border-brand-secondary rounded-lg text-sm focus:border-brand-primary focus:ring-brand-primary disabled:opacity-50 disabled:pointer-events-none"
               placeholder="GPT-420"
               onChange={(e) => updateField(e.target.value, "name")}
             ></input>
             <label
-              htmlFor="input-label"
+              htmlFor="description"
               className="block text-lg font-bold mb-1 mt-9"
             >
               Model Description
@@ -196,13 +215,13 @@ export default function Sell() {
             </p>
             <input
               type="text"
-              id="input-label"
+              id="description"
               className="py-3 px-4 block w-full border-brand-secondary rounded-lg text-sm focus:border-brand-primary focus:ring-brand-primary disabled:opacity-50 disabled:pointer-events-none"
               placeholder="Comprehensive GPT model capable of accepting 69 trillion parameters"
               onChange={(e) => updateField(e.target.value, "description")}
             ></input>
             <label
-              htmlFor="input-label"
+              htmlFor="pricing"
               className="block text-lg font-bold mb-1 mt-9"
             >
               Model Pricing
@@ -210,7 +229,7 @@ export default function Sell() {
             <p className="mb-3">Monthly subscription price to use your model</p>
             <input
               type="text"
-              id="input-label"
+              id="pricing"
               className="py-3 px-4 block w-full border-brand-secondary rounded-lg text-sm focus:border-brand-primary focus:ring-brand-primary disabled:opacity-50 disabled:pointer-events-none"
               placeholder="$69"
               onChange={(e) => updateField(e.target.value, "price")}
@@ -238,18 +257,12 @@ export default function Sell() {
             platform.
           </p>
           <Link href={`/models/${modelId}`}>
-            <button
-              className="py-3 px-11 bg-brand-primary rounded-lg font-bold text-xl text-white mb-9"
-              onClick={submit}
-            >
+            <button className="py-3 px-11 bg-brand-primary rounded-lg font-bold text-xl text-white mb-9">
               View Model
             </button>
           </Link>
           <Link href="/explore">
-            <button
-              className="py-3 px-11 text-brand-primary rounded-lg font-bold text-xl"
-              onClick={submit}
-            >
+            <button className="py-3 px-11 text-brand-primary rounded-lg font-bold text-xl">
               Explore all models
             </button>
           </Link>
