@@ -2,7 +2,7 @@
 import Navbar from "@/components/Navbar";
 import { ibm } from "@/styles/fonts";
 import clsx from "clsx";
-import Link from "next/link";
+import { Triangle } from "react-loader-spinner";
 import { useRouter } from "next/router";
 import { useState, useEffect, use, useMemo } from "react";
 import { CopyBlock, atomOneDark } from "react-code-blocks";
@@ -17,11 +17,12 @@ import {
   useContractWrite,
 } from "@starknet-react/core";
 import { eth } from "@/contracts/eth";
+import { API } from "@/utils/axios";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 const snippets = {
-  bash: `curl -X POST http://localhost:3001/run/123 -H "Authorization: Bearer YOUR_UUID_API_KEY"`,
-  js: `const url = 'http://localhost:3001/run/123';
+  bash: `curl -X POST http://localhost:8000/run/123 -H "Authorization: Bearer YOUR_UUID_API_KEY"`,
+  js: `const url = 'http://localhost:8000/run/123';
 const apiKey = 'YOUR_UUID_API_KEY';
 
 fetch(url, {
@@ -36,7 +37,7 @@ fetch(url, {
 `,
   python: `import requests
 
-url = 'http://localhost:3001/run/123'
+url = 'http://localhost:8000/run/123'
 headers = {
     'Authorization': 'Bearer YOUR_UUID_API_KEY'
 }
@@ -48,7 +49,7 @@ print(response.json())
 require 'uri'
 require 'json'
 
-url = URI.parse('http://localhost:3001/run/123')
+url = URI.parse('http://localhost:8000/run/123')
 http = Net::HTTP.new(url.host, url.port)
 request = Net::HTTP::Post.new(url.request_uri)
 request['Authorization'] = 'Bearer YOUR_UUID_API_KEY'
@@ -61,7 +62,7 @@ use std::collections::HashMap;
 
 #[tokio::main]
 async fn main() -> Result<(), reqwest::Error> {
-    let url = "http://localhost:3001/run/123";
+    let url = "http://localhost:8000/run/123";
     let api_key = "Bearer YOUR_UUID_API_KEY".to_string();
 
     let client = reqwest::Client::new();
@@ -94,6 +95,7 @@ export default function ModelInfo() {
   const { id } = router.query;
   const [step, setStep] = useState(0);
   const [copy, setCopy] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState<keyof typeof snippets>("bash");
   const { address } = useAccount();
   const [txHash, setTxHash] = useState<any>(undefined);
@@ -162,11 +164,20 @@ export default function ModelInfo() {
     // Check if wallet is connected, if not, we prompt them to connect
     // Make a payment
     if (address) {
+      setLoading(true);
       try {
+        const purchase = await API.post(`/model/${id}/purchase`, {
+          api_key: apiKey,
+          owner_address:
+            "0x04E66cbE8fb111b1CbbeabD1ee1d3b485d8eA689237a153D194fDfE5654D767b",
+          subscription_end_timestamp: "1635724800",
+        });
         const res = await writeAsync();
         setTxHash(res.transaction_hash);
       } catch (err) {
         toast.error((err as any).message);
+      } finally {
+        setLoading(false);
       }
     } else {
       toast.error("Please connect your wallet first!");
@@ -191,6 +202,23 @@ export default function ModelInfo() {
       )}
     >
       <Navbar />
+      {loading ? (
+        <div className="absolute left-0 top-0 bg-brand-text/50 backdrop-blur-sm w-screen min-h-screen h-full z-[9999999] flex flex-col items-center justify-center">
+          <p className="font-bold text-white text-2xl mb-8 text-center">
+            Purchasing your model
+          </p>
+          <p className="text-center text-white mb-4">
+            Setting up your access. Please be patient...
+          </p>
+          <Triangle
+            height="80"
+            width="80"
+            color="#ffffff"
+            ariaLabel="triangle-loading"
+            visible={true}
+          />
+        </div>
+      ) : null}
       {hasHydrated ? (
         <div
           className="container grid grid-cols-2 justify-center items-center mx-auto
