@@ -18,64 +18,80 @@ import {
 } from "@starknet-react/core";
 import { eth } from "@/contracts/eth";
 import { API } from "@/utils/axios";
+import { useSearchParams } from "next/navigation";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 const snippets = {
-  bash: `curl -X POST http://localhost:8000/run/123 -H "Authorization: Bearer YOUR_UUID_API_KEY"`,
-  js: `const url = 'http://localhost:8000/run/123';
-const apiKey = 'YOUR_UUID_API_KEY';
-
-fetch(url, {
+  bash: `curl -X POST \\
+http://localhost:8000/infer \\
+-H "Content-Type: application/json" \\
+-d \\
+'{
+  "apiKey": "YOUR_API_KEY",
+  "model_id": "YOUR_MODEL_ID"
+}'
+`,
+  js: `fetch('http://localhost:8000/infer', {
   method: 'POST',
   headers: {
-    'Authorization': 'Bearer YOUR_UUID_API_KEY'
-  }
+      'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+      apiKey: 'YOUR_API_KEY', // Replace with your API key
+      model_id: 'YOUR_MODEL_ID' // Replace with your model ID
+  })
 })
 .then(response => response.json())
 .then(data => console.log(data))
 .catch(error => console.error('Error:', error));
 `,
   python: `import requests
+import json
 
-url = 'http://localhost:8000/run/123'
-headers = {
-    'Authorization': 'Bearer YOUR_UUID_API_KEY'
+url = 'http://localhost:8000/infer'
+data = {
+    'apiKey': 'YOUR_API_KEY',  # Replace with your API key
+    'model_id': 'YOUR_MODEL_ID'  # Replace with your model ID
 }
 
-response = requests.post(url, headers=headers)
+response = requests.post(url, json=data)
 print(response.json())
 `,
   ruby: `require 'net/http'
-require 'uri'
 require 'json'
+require 'uri'
 
-url = URI.parse('http://localhost:8000/run/123')
+url = URI('http://localhost:8000/infer')
 http = Net::HTTP.new(url.host, url.port)
-request = Net::HTTP::Post.new(url.request_uri)
-request['Authorization'] = 'Bearer YOUR_UUID_API_KEY'
+
+request = Net::HTTP::Post.new(url)
+request.content_type = 'application/json'
+request.body = JSON.dump({
+  "apiKey" => "YOUR_API_KEY",  # Replace with your API key
+  "model_id" => "YOUR_MODEL_ID"  # Replace with your model ID
+})
 
 response = http.request(request)
-puts JSON.parse(response.body)
-  `,
-  rust: `use reqwest::header::AUTHORIZATION;
-use std::collections::HashMap;
+puts response.read_body`,
+  rust: `use reqwest;
+use serde_json::json;
+use tokio;
 
 #[tokio::main]
 async fn main() -> Result<(), reqwest::Error> {
-    let url = "http://localhost:8000/run/123";
-    let api_key = "Bearer YOUR_UUID_API_KEY".to_string();
-
     let client = reqwest::Client::new();
-    let res = client.post(url)
-        .header(AUTHORIZATION, api_key)
+    let res = client.post("http://localhost:8000/infer")
+        .json(&json!({
+            "apiKey": "YOUR_API_KEY", // Replace with your API key
+            "model_id": "YOUR_MODEL_ID" // Replace with your model ID
+        }))
         .send()
         .await?;
 
     let response_body = res.text().await?;
     println!("{}", response_body);
     Ok(())
-}
-  `,
+}`,
 };
 
 const useHasHydrated = () => {
@@ -92,6 +108,8 @@ export default function ModelInfo() {
   const router = useRouter();
   const hasHydrated = useHasHydrated();
   const { apiKey, getModel } = useAppStore();
+  const searchParams = useSearchParams();
+  const purchased = searchParams.get("purchased");
   const { id } = router.query;
   const [step, setStep] = useState(0);
   const [copy, setCopy] = useState(false);
@@ -186,6 +204,12 @@ export default function ModelInfo() {
     }
     // Make an API call
   };
+
+  useEffect(() => {
+    if (purchased) {
+      setStep(1);
+    }
+  }, [purchased]);
 
   useEffect(() => {
     if (!isLoading) {
@@ -328,9 +352,9 @@ export default function ModelInfo() {
                           {...{
                             language: key,
                             showLineNumbers: true,
-                            text: snippets[
-                              key as keyof typeof snippets
-                            ].replace("YOUR_UUID_API_KEY", apiKey || ""),
+                            text: snippets[key as keyof typeof snippets]
+                              .replace("YOUR_API_KEY", apiKey || "")
+                              .replace("YOUR_MODEL_ID", (id as string) || ""),
                             theme: atomOneDark,
                             customStyle: {
                               height: "250px",

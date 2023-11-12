@@ -248,12 +248,12 @@ export default function Sell() {
             Congratulations! Your model has now been successfully listed on our
             platform.
           </p>
-          <Link href={`/models/${modelId}`}>
+          <Link href={`/models/${modelId}`} className="z-10">
             <button className="py-3 px-11 bg-brand-primary rounded-lg font-bold text-xl text-white mb-9">
               View Model
             </button>
           </Link>
-          <Link href="/explore">
+          <Link href="/explore" className="z-10">
             <button className="py-3 px-11 text-brand-primary rounded-lg font-bold text-xl">
               Explore all models
             </button>
@@ -261,7 +261,7 @@ export default function Sell() {
           <img
             src="/assets/curved-gradient.png"
             alt=""
-            className="absolute w-screen bottom-0 left-0 pointer-none"
+            className="absolute w-screen bottom-0 left-0 pointer-none z-0"
           />
         </div>
       )}

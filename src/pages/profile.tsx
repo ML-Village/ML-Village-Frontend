@@ -3,6 +3,7 @@
 /* eslint-disable @next/next/no-img-element */
 import Navbar from "@/components/Navbar";
 import { ibm } from "@/styles/fonts";
+import { API } from "@/utils/axios";
 import { useAppStore } from "@/utils/store";
 import { Disclosure } from "@headlessui/react";
 import clsx from "clsx";
@@ -52,14 +53,45 @@ export default function Profile() {
   const { apiKey } = useAppStore();
   const hasHydrated = useHasHydrated();
   const [filter, setFilter] = useState("");
+  const [data, setData] = useState<any[]>([]);
   const filteredData = useMemo(() => {
+    if (data.length <= 0) {
+      return [];
+    }
     if (filter) {
-      return mockData.filter((model) =>
+      return data.filter((model: any) =>
         model.name.toLowerCase().includes(filter.toLowerCase())
       );
     }
-    return mockData;
-  }, [filter]);
+    return data;
+  }, [filter, data]);
+
+  useEffect(() => {
+    API.get(`/me/${apiKey}`)
+      .then((res) => {
+        const models = res.data.models.map((model: any, index: number) => {
+          return {
+            ...model,
+            image:
+              model.name === "GPT-888"
+                ? "/assets/models/Model 0.png"
+                : model.name === "GPT-6969"
+                ? "/assets/models/Model 1.png"
+                : model.name === "GPT-69420"
+                ? "/assets/models/Model 2.png"
+                : (model.name = "GPT-420"
+                    ? "/assets/models/Model 3.png"
+                    : `/assets/models/Model ${index % 4}.png`),
+          };
+        });
+        setData(models);
+      })
+      .catch((err) => {
+        console.log(err);
+        setData(mockData);
+        toast.error("API ding dong");
+      });
+  }, []);
 
   return (
     <main
@@ -75,16 +107,6 @@ export default function Profile() {
             "flex flex-col min-w-full min-h-screen bg-brand-offwhite text-brand-text relative"
           )}
         >
-          <div className="flex flex-col w-full justify-center py-16 px-60 relative bg-banner bg-cover">
-            <p className="font-bold text-4xl text-white mb-4">
-              Find the perfect model for you
-            </p>
-            <p className="text-white z-10 max-w-4xl">
-              Whether you need a basic classification ML model or something more
-              advanced, we&apos;ve got it for you. Just select the model of
-              choice and use it. Everything else is handled by us.
-            </p>
-          </div>
           <div className="flex flex-row">
             <div className="flex flex-col basis-1/5 items-start px-10 py-9 border-r border-brand-text/25 h-full min-h-[80vh] flex-grow gap-y-5">
               <p className="font-bold cursor-pointer">Purchased Models</p>
@@ -171,17 +193,17 @@ export default function Profile() {
               <div className="grid grid-cols-4 w-full gap-x-6">
                 {filteredData.map((model, index) => {
                   return (
-                    <Link href={`/models/${model.id}`} key={model.id}>
+                    <Link
+                      href={`/models/${model.id}?purchased=true`}
+                      key={model.id}
+                    >
                       <div className="flex flex-col rounded-lg overflow-hidden drop-shadow-sm cursor-pointer">
-                        <img
-                          src={`/assets/models/Model ${index}.png`}
-                          alt={model.name}
-                        />
+                        <img src={model.image} alt={model.name} />
                         <div className="flex flex-col w-full h-full p-4 text-white gap-y-1 bg-brand-tertiary">
                           <p className="font-bold">{model.name}</p>
                           <p className="text-sm">{model.description}</p>
                           <p className="text-sm">
-                            ${model.price.toFixed(2)} per month
+                            ${Number(model.price).toFixed(2)} per month
                           </p>
                         </div>
                       </div>

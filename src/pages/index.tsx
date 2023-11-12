@@ -9,7 +9,7 @@ export default function Home() {
   const { setApiKey } = useAppStore();
   useEffect(() => {
     setApiKey(
-      "84df0b8493dd4649c51fed0c0a6e2d4c09ea504437116f6de98176de1f4e2778"
+      "4f842463efd9c0a799cfee89341ca893db7fd0fe776f15381acdf5c2d47a49e2"
     );
   }, []);
 
