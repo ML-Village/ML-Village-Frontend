@@ -91,7 +91,7 @@ const useHasHydrated = () => {
 export default function ModelInfo() {
   const router = useRouter();
   const hasHydrated = useHasHydrated();
-  const { apiKey } = useAppStore();
+  const { apiKey, getModel } = useAppStore();
   const { id } = router.query;
   const [step, setStep] = useState(0);
   const [copy, setCopy] = useState(false);
@@ -116,6 +116,8 @@ export default function ModelInfo() {
     hash: txHash,
     watch: true,
   });
+
+  const model = useMemo(() => getModel(id as string), [id, getModel]);
 
   const chartConfig = {
     options: {
@@ -219,7 +221,7 @@ export default function ModelInfo() {
           />
         </div>
       ) : null}
-      {hasHydrated ? (
+      {hasHydrated && model ? (
         <div
           className="container grid grid-cols-2 justify-center items-center mx-auto
         px-20 pt-8
@@ -230,14 +232,14 @@ export default function ModelInfo() {
           rounded-lg w-auto h-auto overflow-hidden
           "
           >
-            <img src="/assets/models/Model 3.png" alt="" />
+            <img src={model.image} alt="" />
           </div>
 
           {step === 0 ? (
             <div className="px-16">
-              <h1 className="font-bold text-4xl mb-4 w-full">GPT-420</h1>
+              <h1 className="font-bold text-4xl mb-4 w-full">{model.name}</h1>
               <p className="mb-8 text-sm">
-                Here are some statistics about the GPT-420 ML model.
+                Here are some statistics about the {model.name} ML model.
               </p>
 
               {/* metrics bar */}
@@ -289,7 +291,7 @@ export default function ModelInfo() {
           ) : (
             <div className="px-16">
               <h1 className="font-bold text-4xl mb-4 w-full">
-                Integrate GPT-420 into your app
+                Integrate {model.name} into your app
               </h1>
               <p className="mb-8 text-sm">
                 ML Village makes it easy for you to use ML models in your

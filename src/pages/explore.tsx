@@ -1,48 +1,79 @@
 /* eslint-disable @next/next/no-img-element */
 import Navbar from "@/components/Navbar";
 import { ibm } from "@/styles/fonts";
+import { API } from "@/utils/axios";
+import { useAppStore } from "@/utils/store";
 import { Disclosure } from "@headlessui/react";
 import clsx from "clsx";
 import Link from "next/link";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import toast from "react-hot-toast";
 
 const mockData = [
   {
     id: "123",
-    name: "GPT-420",
-    description: "A GPT-2 model trained on 420 memes",
-    price: 42,
+    name: "GPT-888",
+    description: "A GPT-2 model trained on 888 memes",
+    price: "42",
+    image: "/assets/models/Model 0.png",
   },
   {
     id: "456",
     name: "GPT-6969",
     description: "A GPT-2 model trained on 6969 memes",
-    price: 12,
+    price: "12",
+    image: "/assets/models/Model 1.png",
   },
   {
     id: "789",
     name: "GPT-69420",
     description: "A GPT-2 model trained on 69420 memes",
-    price: 31,
+    price: "31",
+    image: "/assets/models/Model 2.png",
   },
   {
     id: "101112",
-    name: "GPT-888",
-    description: "A GPT-2 model trained on 888 memes",
-    price: 192.47,
+    name: "GPT-420",
+    description: "A GPT-2 model trained on 420 memes",
+    price: "192.47",
+    image: "/assets/models/Model 4.png",
   },
 ];
 
 export default function Explore() {
   const [filter, setFilter] = useState("");
+  const { setModels } = useAppStore();
+  const [data, setData] = useState<any[]>([]);
   const filteredData = useMemo(() => {
+    if (data.length <= 0) {
+      return [];
+    }
     if (filter) {
-      return mockData.filter((model) =>
+      return data.filter((model: any) =>
         model.name.toLowerCase().includes(filter.toLowerCase())
       );
     }
-    return mockData;
-  }, [filter]);
+    return data;
+  }, [filter, data]);
+
+  useEffect(() => {
+    API.get("/models")
+      .then((res) => {
+        const models = res.data.map((model: any, index: number) => {
+          return {
+            ...model,
+            image: `/assets/models/Model ${index % 4}.png`,
+          };
+        });
+        setData(models);
+        setModels(models);
+      })
+      .catch((err) => {
+        setData(mockData);
+        setModels(mockData);
+        toast.error("API ding dong");
+      });
+  }, []);
 
   return (
     <main
@@ -117,20 +148,20 @@ export default function Explore() {
                 ></input>
               </div>
             </div>
-            <div className="grid grid-cols-4 w-full gap-x-6">
+            <div className="grid grid-cols-4 w-full gap-x-6 gap-y-8">
               {filteredData.map((model, index) => {
                 return (
                   <Link href={`/models/${model.id}`} key={model.id}>
                     <div className="flex flex-col rounded-lg overflow-hidden drop-shadow-sm cursor-pointer">
                       <img
-                        src={`/assets/models/Model ${index}.png`}
+                        src={`/assets/models/Model ${index % 4}.png`}
                         alt={model.name}
                       />
                       <div className="flex flex-col w-full h-full p-4 text-white gap-y-1 bg-brand-tertiary">
                         <p className="font-bold">{model.name}</p>
                         <p className="text-sm">{model.description}</p>
                         <p className="text-sm">
-                          ${model.price.toFixed(2)} per month
+                          ${Number(model.price).toFixed(2)} per month
                         </p>
                       </div>
                     </div>
