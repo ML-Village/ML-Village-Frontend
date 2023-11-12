@@ -40,7 +40,6 @@ export default function Sell() {
   };
 
   const submit = async () => {
-    console.log(data);
     setIsLoading(true);
     try {
       const res = await API.postForm("/upload_model", {
@@ -61,13 +60,6 @@ export default function Sell() {
     } finally {
       setIsLoading(false);
     }
-
-    // setTimeout(() => {
-    //   setIsLoading(false);
-    //   setStep(1);
-    //   fire();
-    //   setModelId("123456789");
-    // }, 300);
   };
 
   const defaultOptions = {

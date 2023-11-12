@@ -13,7 +13,6 @@ export default function Navbar() {
   const router = useRouter();
 
   useEffect(() => {
-    console.log({ account, address, status });
     if (status === "connected") setIsOpen(false);
   }, [account, address, status]);
 
